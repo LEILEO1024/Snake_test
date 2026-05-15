@@ -44,14 +44,20 @@ function spawnFood() {
 
 function getNextHead() {
   return {
-    x: (snake[0].x + nextDirection.x + GRID_SIZE) % GRID_SIZE,
-    y: (snake[0].y + nextDirection.y + GRID_SIZE) % GRID_SIZE,
+    x: snake[0].x + nextDirection.x,
+    y: snake[0].y + nextDirection.y,
   };
 }
 
 function tick() {
   direction = { ...nextDirection };
   const head = getNextHead();
+
+  // check wall collision
+  if (head.x < 0 || head.x >= GRID_SIZE || head.y < 0 || head.y >= GRID_SIZE) {
+    gameOver();
+    return;
+  }
 
   // check self-collision
   if (snake.some(s => s.x === head.x && s.y === head.y)) {
@@ -154,7 +160,7 @@ function gameOver() {
 
 function startGame() {
   if (running) return;
-  if (startBtn.textContent === '你赢了！') {
+  if (startBtn.textContent !== '开始游戏') {
     init();
   }
   running = true;
